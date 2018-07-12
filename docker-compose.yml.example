@@ -1,0 +1,25 @@
+version: '3'
+services:
+    my_site:
+      image: dev-server:latest
+      restart: always
+      ports:
+       - "8091:80"
+      volumes:
+       - /absolute/path/to/my/project:/var/app
+      links:
+       - mysql:db
+    phpmyadmin:
+      image: phpmyadmin/phpmyadmin
+      restart: always
+      ports:
+       - "8090:80"
+      links:
+       - mysql:db
+    mysql:
+      image: mysql
+      restart: always
+      ports:
+       - "3307:3306"
+      volumes:
+       - /absolute/path/to/mysql/data:/var/lib/mysql
