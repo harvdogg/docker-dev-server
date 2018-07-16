@@ -2,9 +2,11 @@ version: '3'
 services:
     my_site:
       image: dev-server:latest
+      build:
+        context: .
       restart: always
       ports:
-       - "8091:80"
+       - "127.0.0.1:8091:80"
       volumes:
        - /absolute/path/to/my/project:/var/app
       links:
@@ -13,13 +15,16 @@ services:
       image: phpmyadmin/phpmyadmin
       restart: always
       ports:
-       - "8090:80"
+       - "127.0.0.1:8090:80"
       links:
        - mysql:db
     mysql:
-      image: mysql
+      image: mysql:latest
       restart: always
       ports:
-       - "3307:3306"
+       - "127.0.0.1:3307:3306"
       volumes:
-       - /absolute/path/to/mysql/data:/var/lib/mysql
+       - db_data:/var/lib/mysql
+
+volumes:
+  db_data: {}
