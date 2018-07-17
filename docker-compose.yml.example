@@ -9,8 +9,10 @@ services:
        - "127.0.0.1:8091:80"
       volumes:
        - /absolute/path/to/my/project:/var/app
+       - ./.composer:/root/.composer
       links:
        - mysql:db
+      tty: true # Pretty colors
     phpmyadmin:
       image: phpmyadmin/phpmyadmin
       restart: always
@@ -28,3 +30,5 @@ services:
 
 volumes:
   db_data: {}
+
+
