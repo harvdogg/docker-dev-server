@@ -25,7 +25,7 @@ RUN mkdir /tmp/nginx \
     && chmod +x /etc/service/nginx/run \
     && mkdir -p /etc/service/fpm \
     && echo '#!/bin/sh' >> /etc/service/fpm/run \
-    && echo 'php-fpm -FR' >> /etc/service/fpm/run \
+    && echo 'php-fpm7 -FR' >> /etc/service/fpm/run \
     && chmod +x /etc/service/fpm/run \
     && chmod +x /sbin/runsvinit
 
