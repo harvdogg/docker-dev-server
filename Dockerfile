@@ -5,7 +5,7 @@ RUN apk add --no-cache curl ca-certificates php7-intl nginx runit openssl git \
         php php-common php-curl php-ctype php-sockets php-session \
         php-dom php-xml php-phar php-mbstring php-pcntl php-json \
         php-opcache php-pdo php-pdo_mysql php-fpm php-tokenizer php-openssl \
-        php-simplexml php-xmlwriter
+        php-simplexml php-xmlwriter php-gd
 
 # Install Composer
 RUN curl https://getcomposer.org/composer.phar > /usr/sbin/composer \
