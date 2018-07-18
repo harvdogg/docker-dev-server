@@ -1,37 +1,46 @@
 version: '3'
 services:
-    my_site:
-      image: dev-server:latest
-      build:
-        context: .
-      restart: always
-      ports:
-       - "127.0.0.1:8091:80"
-      volumes:
-       - /absolute/path/to/my/project:/var/app
-       - ./.composer:/root/.composer
-      links:
-       - mysql:db
-      tty: true # Pretty colors
-    phpmyadmin:
-      image: phpmyadmin/phpmyadmin
-      restart: always
-      ports:
-       - "127.0.0.1:8090:80"
-      links:
-       - mysql:db
-    mysql:
-      image: mysql:5.7
-      restart: always
-      environment:
-        MYSQL_ROOT_PASSWORD: ""
-        MYSQL_DATABASE: ""
-      ports:
-       - "127.0.0.1:3307:3306"
-      volumes:
-       - db_data:/var/lib/mysql
+  dev: # Should be above the prod servers below.
+    image: dev-build:latest
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    volumes:
+      - /absolute/path/to/my/project:/var/app/project
+      - ./.composer:/root/.composer
+      - node_modules:/var/app/app_name/node_modules
+    links:
+      - mysql:db
+  my_site:
+    image: dev-server:latest
+    build:
+      context: .
+      dockerfile: Dockerfile.prod
+    restart: always
+    ports:
+      - "127.0.0.1:8091:80"
+    volumes:
+      - /absolute/path/to/my/project:/var/app
+    links:
+      - mysql:db
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    restart: always
+    ports:
+      - "127.0.0.1:8090:80"
+    links:
+      - mysql:db
+  mysql:
+    image: mysql:5.7
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ""
+      MYSQL_DATABASE: ""
+    ports:
+      - "127.0.0.1:3307:3306"
+    volumes:
+      - db_data:/var/lib/mysql
 
 volumes:
   db_data: {}
-
-
+  node_modules: {}
