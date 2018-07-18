@@ -1,0 +1,22 @@
+FROM alpine:3.8
+
+# Install prod environment packages
+RUN apk add --no-cache curl ca-certificates openssl git nginx runit \
+        php php-common php-curl php-ctype php-sockets php-session php7-intl \
+        php-dom php-xml php-phar php-mbstring php-pcntl php-json \
+        php-opcache php-pdo php-pdo_mysql php-fpm php-tokenizer php-openssl \
+        php-simplexml php-xmlwriter php-gd
+
+# Install dev environment packages
+RUN apk add --no-cache bash nodejs npm autoconf libpng-dev
+
+# Install Composer
+RUN curl https://getcomposer.org/composer.phar > /usr/sbin/composer \
+    && chmod a+x /usr/sbin/composer
+
+# Install global NPM dependencies
+RUN npm install npm@latest -g \
+    && npm install grunt -g
+
+WORKDIR /var/app
+CMD ["bash"]
