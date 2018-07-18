@@ -1,35 +1,22 @@
-FROM ubuntu:bionic
+FROM alpine:3.8
 
-# Set time zone
-ENV TZ 'UTC'
-RUN echo $TZ > /etc/timezone
+# Install prod environment packages
+RUN apk add --no-cache curl ca-certificates openssl git nginx runit \
+        php php-common php-curl php-ctype php-sockets php-session php7-intl \
+        php-dom php-xml php-phar php-mbstring php-pcntl php-json \
+        php-opcache php-pdo php-pdo_mysql php-fpm php-tokenizer php-openssl \
+        php-simplexml php-xmlwriter php-gd
 
-# Avoid ERROR: invoke-rc.d: policy-rc.d denied execution of start.
-RUN sed -i "s/^exit 101$/exit 0/" /usr/sbin/policy-rc.d
+# Install dev environment packages
+RUN apk add --no-cache bash nodejs npm autoconf libpng-dev
 
-# Install essential packages
-RUN apt-get update && \
-    DEBIAN_FRONTEND=noninteractive apt-get install -q -y --no-install-recommends ca-certificates \
-        curl wget tar software-properties-common sudo zip unzip git tzdata \
-        php7.2-cli php7.2-curl php7.2-intl php7.2-xml php7.2-mysqlnd php7.2-mbstring php7.2-xml php7.2-redis \
-        nodejs npm
-
-# Create non-root user.
-RUN adduser --home /var/app --disabled-password --gecos "" ubuntu \
-    && mkdir -p /var/app \
-    && chown -R ubuntu:ubuntu /var/app \
-    && echo 'ubuntu ALL=(ALL) NOPASSWD: ALL' >> /etc/sudoers
-
-# Install PHP 7.2
-COPY ./container/php.ini /etc/php/7.2/cli/conf.d/05-custom.ini
-
-# Install composer
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin --filename=composer
+# Install Composer
+RUN curl https://getcomposer.org/composer.phar > /usr/sbin/composer \
+    && chmod a+x /usr/sbin/composer
 
 # Install global NPM dependencies
 RUN npm install npm@latest -g \
     && npm install grunt -g
 
 WORKDIR /var/app
-USER ubuntu
 CMD ["bash"]
